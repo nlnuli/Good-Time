@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 import reggie.common.R;
 import reggie.dto.SetmealDto;
@@ -31,6 +33,7 @@ public class SetmealController {
     private CategoryService categoryService;
 
     @PostMapping
+    @CacheEvict(value = "setmealCache", allEntries = true) //删除所有的缓存数据
     public R<String> save(@RequestBody SetmealDto setmealDto) {
         setmealService.saveWithDish(setmealDto);
         return R.success("新增成功");
@@ -80,6 +83,7 @@ public class SetmealController {
      */
     //多张表的操作可以封装到service中完成
     //对于多个参数的可以直接用list来接受
+    @CacheEvict(value = "setmealCache", allEntries = true) //删除所有的缓存数据
     @DeleteMapping
     public R<String> delete(@RequestParam  List<Long> ids) {
         setmealService.removeWithDish(ids);
@@ -95,6 +99,7 @@ public class SetmealController {
      */
     //如果是键值对的话可以直接来接收，自动封装为对象
     @GetMapping("/list")
+    @Cacheable(value = "setmealCache", key = "#setmeal.categoryId +'_' + #setmeal.status")
     public R<List<Setmeal>> list(Setmeal setmeal) {
         LambdaQueryWrapper<Setmeal> lambdaQueryWrapper = new LambdaQueryWrapper<>();
         lambdaQueryWrapper.eq(setmeal.getCategoryId()!= null, Setmeal::getCategoryId, setmeal.getCategoryId());

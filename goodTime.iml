@@ -122,7 +122,6 @@
     <orderEntry type="library" name="Maven: org.springframework.data:spring-data-commons:2.4.8" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-tx:5.3.6" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-oxm:5.3.6" level="project" />
-    <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.3.6" level="project" />
     <orderEntry type="library" name="Maven: io.lettuce:lettuce-core:6.0.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-common:4.1.63.Final" level="project" />
     <orderEntry type="library" name="Maven: io.netty:netty-handler:4.1.63.Final" level="project" />
@@ -132,5 +131,7 @@
     <orderEntry type="library" name="Maven: io.netty:netty-transport:4.1.63.Final" level="project" />
     <orderEntry type="library" name="Maven: io.projectreactor:reactor-core:3.4.5" level="project" />
     <orderEntry type="library" name="Maven: org.reactivestreams:reactive-streams:1.0.3" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-cache:2.4.5" level="project" />
+    <orderEntry type="library" name="Maven: org.springframework:spring-context-support:5.3.6" level="project" />
   </component>
 </module>
