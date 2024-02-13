@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +18,7 @@ import reggie.utils.ValidateCodeUtils;
 
 import javax.servlet.http.HttpSession;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/user")
@@ -23,6 +26,8 @@ import java.util.Map;
 public class UserController {
     @Autowired
     private UserService userService;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /***
      * 发送手机验证码
@@ -40,8 +45,8 @@ public class UserController {
             //调用阿里云服务API完成服务
             //保存到session完成验证
             session.setAttribute(phone,code);
-
-
+            //缓存到redis中，设置有效期5分钟
+            redisTemplate.opsForValue().set(phone,code,5, TimeUnit.MINUTES);
             return  R.success("发送成功");
         }
         return R.error("失败");
@@ -62,7 +67,10 @@ public class UserController {
         //code
 
         //从Session中获取保存的验证码
-        Object attribute = session.getAttribute(phone);
+        //Object attribute = session.getAttribute(phone);
+
+        //从Redis获取保存的验证码：
+        Object attribute =  redisTemplate.opsForValue().get(phone);
 
         //比对
         if(attribute == null) {
@@ -76,6 +84,8 @@ public class UserController {
                 userService.save(user);
             }
             session.setAttribute("user",user.getId());
+            //如果用户登陆成功删除Redis中缓存的验证码
+            redisTemplate.delete(phone);
             return R.success(user);
 
         }
