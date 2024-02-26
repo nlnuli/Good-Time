@@ -1,5 +1,5 @@
 server:
-  port: 8080
+  port: 80
 spring:
   application:
     #可选名称
@@ -26,6 +26,7 @@ mybatis-plus:
   global-config:
     db-config:
       id-type: ASSIGN_ID
+      #使用UUID来生成主键ID
 
 reggie:
   path: /Users/yewen/Desktop/food/goodTime/photos/
